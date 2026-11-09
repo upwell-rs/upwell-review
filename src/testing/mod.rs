@@ -1,6 +1,10 @@
-//! Test doubles for `git` and `gh`.
+//! Test doubles for `git` and `gh`, and fixture files.
 
 use std::cell::RefCell;
+use std::fs;
+use std::path::{Path, PathBuf};
+
+use serde_json::{Value, json};
 
 use crate::git::Git;
 use crate::github::{GitHub, PostedReview, PrFile, PullRequest, ReviewPayload};
@@ -14,6 +18,34 @@ pub const BASE: &str = "ba5eba5eba5eba5eba5eba5eba5eba5eba5eba5e";
 
 /// A diff of one changed line, `src/lib.rs:1`.
 pub const DIFF: &str = "diff --git a/src/lib.rs b/src/lib.rs\n--- a/src/lib.rs\n+++ b/src/lib.rs\n@@ -1,1 +1,1 @@\n-x\n+y\n";
+
+/// The legacy fixture draft, at `src/lib.rs:1`.
+pub fn draft() -> Value {
+    json!({"severity": "major", "path": "src/lib.rs", "line": 1, "title": "t", "body": "b", "suggestion": "s"})
+}
+
+/// Returns the fixture draft with extra fields merged in.
+pub fn draft_with(extra: Value) -> Value {
+    let mut value = draft();
+
+    if let (Some(fields), Value::Object(extra)) = (value.as_object_mut(), extra) {
+        fields.extend(extra);
+    }
+
+    value
+}
+
+/// Writes `value` to `dir/name`: one JSON line per array item for `.jsonl`, else JSON.
+pub fn write(dir: &Path, name: &str, value: &Value) -> PathBuf {
+    let path = dir.join(name);
+    let text = match (name.ends_with(".jsonl"), value) {
+        (true, Value::Array(items)) => items.iter().map(|item| format!("{item}\n")).collect(),
+        _ => value.to_string(),
+    };
+
+    fs::write(&path, text).expect("fixture file is written");
+    path
+}
 
 /// A scripted checkout whose state a test may change mid-run.
 #[derive(Debug)]

@@ -4,6 +4,7 @@
 
 mod assets;
 mod diffmap;
+mod drafts;
 mod git;
 mod github;
 mod guard;
@@ -15,5 +16,6 @@ mod stream;
 #[cfg(test)]
 mod testing;
 mod tools;
+mod verify;
 
 fn main() {}
