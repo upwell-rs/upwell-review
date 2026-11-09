@@ -5,6 +5,7 @@
 mod assets;
 mod diffmap;
 mod model;
+mod provider;
 mod schema;
 mod stream;
 

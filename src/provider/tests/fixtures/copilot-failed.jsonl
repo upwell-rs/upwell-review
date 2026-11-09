@@ -1,0 +1,4 @@
+{"type":"session.start","data":{"sessionId":"9a0b","model":"gpt-6.1-terra"},"id":"e1","timestamp":"2026-11-07T10:00:00.000Z"}
+{"type":"assistant.message_delta","data":{"messageId":"m1","deltaContent":"UPWELL_FINDING_DRAFT {\"status\":\"draft\",\"severity\":\"minor\",\"path\":\"src/a.rs\",\"line\":3,\"title\":\"t\",\"body\":\"b\",\"suggestion\":\"\"}\n"},"id":"e2","timestamp":"2026-11-07T10:00:01.000Z","ephemeral":true}
+Error: rate limit exceeded; try again in 41 minutes
+{"type":"result","timestamp":"2026-11-07T10:00:02.000Z","sessionId":"9a0b","exitCode":1}

@@ -1,0 +1,2 @@
+{"event":"step_update","step_update":{"step_index":0,"state":"RUNNING","text_delta":"I hit a quota."}}
+{"event":"result","result":{"status":"QUOTA_EXCEEDED","response":"I hit a quota."}}
