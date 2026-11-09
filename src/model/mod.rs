@@ -8,7 +8,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-pub use answers::{Decision, DecisionKind, DoneMarker, DoneStatus, Review, Verdict, VerifyAnswer};
+pub use answers::{Decision, DecisionKind, DoneMarker, Review, Verdict, VerifyAnswer};
 pub use draft::{Draft, PrRef, SavedDraft, Stamp, StoredDraft, VerifyInput};
 pub use stages::{DiscoveryStage, Stages, VerificationStage};
 

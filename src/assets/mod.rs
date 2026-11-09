@@ -35,7 +35,7 @@ pub enum Asset {
 }
 
 impl Asset {
-    /// Every asset, for listing and tests.
+    /// Every asset, for `doctor` and tests.
     pub const ALL: [Self; 9] = [
         Self::ReviewPrompt,
         Self::DraftsPrompt,
@@ -47,6 +47,14 @@ impl Asset {
         Self::VerifySchema,
         Self::ReviewSchema,
     ];
+
+    /// Returns whether the asset is a JSON schema.
+    pub const fn is_schema(self) -> bool {
+        matches!(
+            self,
+            Self::DiscoverySchema | Self::VerifySchema | Self::ReviewSchema
+        )
+    }
 
     /// Returns the file name, which is also the name an override must have.
     pub const fn file_name(self) -> &'static str {
