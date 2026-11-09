@@ -16,6 +16,7 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, ExitStatus};
 use std::str::FromStr;
 
+use serde::{Deserialize, Deserializer, de};
 use serde_json::Value;
 use thiserror::Error;
 
@@ -106,6 +107,14 @@ impl FromStr for ProviderKind {
             "copilot" => Ok(Self::Copilot),
             other => Err(UnknownProvider(other.to_owned())),
         }
+    }
+}
+
+impl<'de> Deserialize<'de> for ProviderKind {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let name = String::deserialize(deserializer)?;
+
+        name.parse().map_err(de::Error::custom)
     }
 }
 
