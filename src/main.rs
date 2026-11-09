@@ -3,6 +3,7 @@
 //! `upwell-review`: an independent, read-only, two-stage pull request review for `upwell-rs/upwell`.
 
 mod assets;
+mod config;
 mod diffmap;
 mod drafts;
 mod git;
@@ -12,6 +13,7 @@ mod lock;
 mod model;
 mod post;
 mod provider;
+mod review;
 mod schema;
 mod stream;
 #[cfg(test)]

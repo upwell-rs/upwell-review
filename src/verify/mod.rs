@@ -109,8 +109,17 @@ struct Record<'a> {
     verifier: &'a Origin,
 }
 
+/// The outcome of a verification: the review to post and the stages of its footer.
+#[derive(Debug)]
+pub struct Verified {
+    /// The verified review.
+    pub review: Review,
+    /// The discovery and verification runs behind it.
+    pub stages: Stages,
+}
+
 /// Validates the verifier's answer against the drafts and the diff, then writes `review.json`,
-/// `stages.json` and `verification.jsonl` (also appended to the mirror) and returns the stages.
+/// `stages.json` and `verification.jsonl` (also appended to the mirror) and returns the review.
 pub fn apply(
     assets: &Assets,
     drafts: &[VerifyInput],
@@ -119,7 +128,7 @@ pub fn apply(
     outputs: &Outputs<'_>,
     verifier: &Origin,
     resumed: bool,
-) -> Result<Stages, VerifyError> {
+) -> Result<Verified, VerifyError> {
     let answer: VerifyAnswer = schema::load(
         answer,
         &assets.schema(Asset::VerifySchema)?,
@@ -169,7 +178,7 @@ pub fn apply(
     drafts::write_jsonl(outputs.mirror, &records, true)?;
     write_results(outputs.run_dir, &review, &stages)?;
 
-    Ok(stages)
+    Ok(Verified { review, stages })
 }
 
 /// Reads the discovery answer as a done marker.
@@ -201,7 +210,7 @@ pub fn empty(
     discovery: &Path,
     run_dir: &Path,
     origin: Origin,
-) -> Result<Stages, VerifyError> {
+) -> Result<Verified, VerifyError> {
     let marker = done_marker(assets, discovery)?;
 
     check_saved(&marker, 0)?;
@@ -223,7 +232,7 @@ pub fn empty(
 
     write_results(run_dir, &review, &stages)?;
 
-    Ok(stages)
+    Ok(Verified { review, stages })
 }
 
 /// Pairs every draft with its decision, in draft order; rejects unknown and duplicate ids and a draft

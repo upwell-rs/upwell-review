@@ -36,3 +36,17 @@ fn other_models_and_released_locks_are_free() {
     ModelLock::acquire(root.path(), ProviderKind::Copilot, "org/model")
         .expect("released lock is free");
 }
+
+#[test]
+fn switching_releases_the_old_lock_and_holds_the_new_one() {
+    let root = root();
+    let mut held = ModelLock::acquire(root.path(), ProviderKind::Copilot, "a").expect("first lock");
+
+    held.switch(ProviderKind::Copilot, "a")
+        .expect("already covered");
+    held.switch(ProviderKind::Codex, "b").expect("switched");
+
+    assert!(held.covers(ProviderKind::Codex, "b"));
+    ModelLock::acquire(root.path(), ProviderKind::Copilot, "a").expect("old lock is released");
+    ModelLock::acquire(root.path(), ProviderKind::Codex, "b").expect_err("new lock is held");
+}

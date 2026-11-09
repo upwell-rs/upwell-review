@@ -37,7 +37,7 @@ fn inputs() -> Vec<VerifyInput> {
         .collect()
 }
 
-fn apply_answer(dir: &TempDir, decisions: Value) -> Result<Stages, VerifyError> {
+fn apply_answer(dir: &TempDir, decisions: Value) -> Result<Verified, VerifyError> {
     let answer = write(
         dir.path(),
         "verify.json",
@@ -110,7 +110,9 @@ fn a_done_marker_matching_the_saved_drafts_is_accepted() {
 fn a_done_marker_without_drafts_posts_a_clean_review() {
     let dir = TempDir::new().expect("temp dir");
     let path = write(dir.path(), "discovery.json", &marker(0));
-    let stages = empty(&Assets::default(), &path, dir.path(), origin()).expect("clean review");
+    let stages = empty(&Assets::default(), &path, dir.path(), origin())
+        .expect("clean review")
+        .stages;
 
     assert_eq!(review(&dir).verdict, Verdict::NoFindings);
     assert_eq!(stages.verification, None);
@@ -154,7 +156,9 @@ fn an_answer_leaving_out_drafts_is_refused() {
 #[test]
 fn an_answer_deciding_every_draft_is_applied() {
     let dir = TempDir::new().expect("temp dir");
-    let stages = apply_answer(&dir, json!([decision("D1"), decision("D2")])).expect("applied");
+    let stages = apply_answer(&dir, json!([decision("D1"), decision("D2")]))
+        .expect("applied")
+        .stages;
     let records = fs::read_to_string(dir.path().join("mirror.jsonl")).expect("mirror appended");
 
     assert_eq!(review(&dir).findings.len(), 2);

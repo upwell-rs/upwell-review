@@ -48,6 +48,7 @@ pub enum LockError {
 /// A held per-model lock; dropping it releases the lock.
 #[derive(Debug)]
 pub struct ModelLock {
+    root: PathBuf,
     provider: ProviderKind,
     model: String,
     _file: File,
@@ -92,6 +93,7 @@ impl ModelLock {
         fs::write(&pid_path, format!("{}\n", process::id())).map_err(io_error)?;
 
         Ok(Self {
+            root: root.to_owned(),
             provider,
             model: model.to_owned(),
             _file: file,
@@ -101,5 +103,17 @@ impl ModelLock {
     /// Returns whether this lock already covers `provider` and `model`.
     pub fn covers(&self, provider: ProviderKind, model: &str) -> bool {
         self.provider == provider && self.model == model
+    }
+
+    /// Holds the lock of `provider` and `model` instead, unless this lock already covers them; the old
+    /// lock is released once the new one is held.
+    pub fn switch(&mut self, provider: ProviderKind, model: &str) -> Result<(), LockError> {
+        if self.covers(provider, model) {
+            return Ok(());
+        }
+
+        *self = Self::acquire(&self.root, provider, model)?;
+
+        Ok(())
     }
 }
