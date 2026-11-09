@@ -1,10 +1,11 @@
 use std::cell::RefCell;
 use std::io;
 
-use serde_json::json;
+use serde_json::{Value, json};
 use tempfile::TempDir;
 
 use super::*;
+use crate::config::StageRun;
 use crate::drafts::DraftsError;
 use crate::guard::GuardError;
 use crate::lock::LockError;
