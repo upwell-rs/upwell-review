@@ -4,9 +4,16 @@
 
 mod assets;
 mod diffmap;
+mod git;
+mod github;
+mod guard;
+mod lock;
 mod model;
 mod provider;
 mod schema;
 mod stream;
+#[cfg(test)]
+mod testing;
+mod tools;
 
 fn main() {}
