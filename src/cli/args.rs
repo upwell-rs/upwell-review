@@ -89,7 +89,11 @@ pub struct RunArgs {
     #[arg(long)]
     pub mix: Option<String>,
     /// Run everything except the post and print the would-be review
-    #[arg(long, env = "UPWELL_REVIEW_DRY_RUN")]
+    #[arg(
+        long,
+        env = "UPWELL_REVIEW_DRY_RUN",
+        value_parser = clap::builder::FalseyValueParser::new()
+    )]
     pub dry_run: bool,
 }
 
