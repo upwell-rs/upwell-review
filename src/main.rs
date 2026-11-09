@@ -10,6 +10,7 @@ mod github;
 mod guard;
 mod lock;
 mod model;
+mod post;
 mod provider;
 mod schema;
 mod stream;

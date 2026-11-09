@@ -101,6 +101,14 @@ pub enum Verdict {
 }
 
 impl Verdict {
+    /// Returns the schema spelling of the verdict.
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::NoFindings => "NO_FINDINGS",
+            Self::Findings => "FINDINGS",
+        }
+    }
+
     /// Returns the verdict as the review body prints it.
     pub const fn label(self) -> &'static str {
         match self {
