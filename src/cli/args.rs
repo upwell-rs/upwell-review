@@ -46,7 +46,7 @@ pub enum Command {
     Review(ReviewArgs),
     /// Verify a saved drafts file of the current PR head and post the result
     Verify(VerifyArgs),
-    /// Check the provider CLIs, git, gh and its login, the providers file and the worktree
+    /// Check the provider CLIs, git, gh and its login, the providers file, the prompts and the worktree
     Doctor(DoctorArgs),
     /// List the drafts of a drafts file, most severe first
     Drafts {
